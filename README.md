@@ -10,7 +10,7 @@ Given a simple matrix layout with an initial anchor word:
 
 and three unused words "ABE", "EAR" and "CAR", the solution is:
 
-[A] | [B] | [C]
+[A] | [R] | [C]
 -- | -- | --
 [B] |     | [A]
 [E] | [A] | [R]
