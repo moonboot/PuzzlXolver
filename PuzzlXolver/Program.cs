@@ -2,12 +2,20 @@
 
 namespace PuzzlXolver
 {
-    public class MainClass
+    public class Program
     {
         public static void Main(string[] args)
         {
             var saillagouse = KrydsordMix.CreatePage59();
-            Console.WriteLine(saillagouse);
+            var solver = new Solver();
+            if (solver.Solve(saillagouse))
+            {
+				Console.WriteLine(saillagouse);
+			}
+            else
+            {
+                Console.WriteLine("Not solved :-(");
+			}
         }
     }
 }

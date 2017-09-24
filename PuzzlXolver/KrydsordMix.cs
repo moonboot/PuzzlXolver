@@ -47,6 +47,11 @@ namespace PuzzlXolver
 				puzzle.AddCellRange(i, 10, 3, Direction.Vertical);
 			}
 
+            string anchorWord = "RADER";
+            CellRange anchorRange = puzzle.FindCellRange(22, 18, Direction.Vertical);
+            anchorRange.SetWord(anchorWord);
+            puzzle.State.MarkWordAsUsed(anchorWord);
+
             puzzle.Verify();
 
 			return puzzle;

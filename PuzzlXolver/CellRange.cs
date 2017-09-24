@@ -8,7 +8,7 @@ namespace PuzzlXolver
     {
         private int originX, originY;
         private int length;
-        private Direction direction;
+        public Direction Direction { get; private set; }
 
         public List<Cell> Cells { get; private set; }
 
@@ -17,7 +17,7 @@ namespace PuzzlXolver
 			this.originX = originX;
 			this.originY = originY;
             this.length = length;
-            this.direction = direction;
+            this.Direction = direction;
             Cells = cells;
         }
 
@@ -28,7 +28,7 @@ namespace PuzzlXolver
 
         public void SetWord(string word)
         {
-            if (Cells.Count != word.Length) throw new ArgumentException(nameof(word), $"Word should have length {Cells.Count}, was {word}");
+            if (!Matches(word)) throw new ArgumentException(nameof(word), $"Word {word} does not match {this}");
 
             for (int pos = 0; pos < Cells.Count; pos++)
             {
@@ -44,5 +44,25 @@ namespace PuzzlXolver
                 }
             }
         }
-    }
+
+		public bool PartiallyFilled()
+		{
+			return Cells.Any(c => c.State == CellState.Filled) && Cells.Any(c => c.State != CellState.Filled);
+		}
+
+        public bool Matches(string word)
+        {
+            if (Cells.Count != word.Length) return false;
+
+			for (int pos = 0; pos < Cells.Count; pos++)
+			{
+				if (Cells[pos].State == CellState.Filled && Cells[pos].Value != word[pos])
+				{
+                    return false;
+				}
+			}
+
+            return true;
+		}
+	}
 }

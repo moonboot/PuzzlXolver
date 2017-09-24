@@ -74,6 +74,11 @@ namespace PuzzlXolver
 					throw new Exception($"Expected {kvp.Value} words of length {kvp.Key}, but got {wordLengths[kvp.Key]}");
 				}
 			}
+
+            if (!CellRanges.Any(cr => cr.PartiallyFilled()))
+            {
+				throw new Exception($"Expected at least one initial anchor word");
+			}
 		}
 
 		public void SetValue(int column, int row, char value)
@@ -85,6 +90,12 @@ namespace PuzzlXolver
 		{
 			return State.GetValue(column, row);
 		}
+
+        public CellRange FindCellRange(int column, int row, Direction direction)
+        {
+            Cell initialCell = cells[column, row];
+            return CellRanges.SingleOrDefault(cr => cr.Cells.First() == initialCell && cr.Direction == direction);
+        }
 
 		public override string ToString()
 		{
