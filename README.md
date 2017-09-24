@@ -14,3 +14,6 @@ and three unused words "ABE", "EAR" and "CAR", the solution is:
 -- | -- | --
 [B] |     | [A]
 [E] | [A] | [R]
+
+# Tech
+The solution is written in C# and targets .NET Core 2.0.
