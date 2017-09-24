@@ -1,0 +1,29 @@
+
+Microsoft Visual Studio Solution File, Format Version 15.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuzzlXolver", "PuzzlXolver\PuzzlXolver.csproj", "{0EA4067D-500C-4778-B8A8-6EAD8117C2E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuzzlXolverXunit", "PuzzlXolverXunit\PuzzlXolverXunit.csproj", "{AA404990-2C18-4E68-916D-FE25D69BF144}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuzzlXolverNunit", "PuzzlXolverNunit\PuzzlXolverNunit.csproj", "{C1B8B41A-C46F-495A-A14C-B997B3944119}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0EA4067D-500C-4778-B8A8-6EAD8117C2E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EA4067D-500C-4778-B8A8-6EAD8117C2E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EA4067D-500C-4778-B8A8-6EAD8117C2E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EA4067D-500C-4778-B8A8-6EAD8117C2E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA404990-2C18-4E68-916D-FE25D69BF144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA404990-2C18-4E68-916D-FE25D69BF144}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA404990-2C18-4E68-916D-FE25D69BF144}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA404990-2C18-4E68-916D-FE25D69BF144}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1B8B41A-C46F-495A-A14C-B997B3944119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B8B41A-C46F-495A-A14C-B997B3944119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B8B41A-C46F-495A-A14C-B997B3944119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B8B41A-C46F-495A-A14C-B997B3944119}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
