@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace PuzzlXolver
 {
@@ -20,14 +20,14 @@ namespace PuzzlXolver
                 "PRAKSIS", "RIMSMED", "SEMINAR", "SKITSER", "SLØJFER", "SPINKEL", "TIDLIGT", "TRICEPS",
             };
 
-            var puzzle = new Puzzle(23, 23, words);
+            List<CellRange> cellRanges = new List<CellRange>();
 
 			// 5x5 squares
             for (int column = 0; column < 24; column += 6)
 			{
 				for (int row = 0; row < 24; row += 6)
 				{
-                    AddSquare(puzzle, column, row, 5);
+                    cellRanges.AddRange(AddSquare(column, row, 5));
 				}
 			}
 
@@ -36,33 +36,34 @@ namespace PuzzlXolver
 			{
 				for (int row = 2; row < 26; row += 12)
 				{
-					AddSquare(puzzle, column, row, 7);
+                    cellRanges.AddRange(AddSquare(column, row, 7));
 				}
 			}
 
             // 3s
 			for (int i = 2; i < 24; i += 6)
 			{
-				puzzle.AddCellRange(10, i, 3, Direction.Horizontal);
-				puzzle.AddCellRange(i, 10, 3, Direction.Vertical);
+                cellRanges.Add(new CellRange(10, i, 3, Direction.Horizontal));
+                cellRanges.Add(new CellRange(i, 10, 3, Direction.Vertical));
 			}
 
-            string anchorWord = "RADER";
+			var puzzle = new Puzzle(23, 23, cellRanges, words);
+
+			string anchorWord = "RADER";
             CellRange anchorRange = puzzle.FindCellRange(22, 18, Direction.Vertical);
-            anchorRange.SetWord(anchorWord);
-            puzzle.State.MarkWordAsUsed(anchorWord);
+            puzzle = puzzle.SetWord(anchorRange, anchorWord);
 
             puzzle.Verify();
 
 			return puzzle;
 		}
 
-        static void AddSquare(Puzzle puzzle, int column, int row, int size)
+        static IEnumerable<CellRange> AddSquare(int column, int row, int size)
         {
-			puzzle.AddCellRange(column, row, size, Direction.Horizontal);
-			puzzle.AddCellRange(column, row, size, Direction.Vertical);
-			puzzle.AddCellRange(column + size - 1, row, size, Direction.Vertical);
-			puzzle.AddCellRange(column, row + size -1, size, Direction.Horizontal);
+			yield return new CellRange(column, row, size, Direction.Horizontal);
+			yield return new CellRange(column, row, size, Direction.Vertical);
+			yield return new CellRange(column + size - 1, row, size, Direction.Vertical);
+			yield return new CellRange(column, row + size -1, size, Direction.Horizontal);
 		}
 	}
 }

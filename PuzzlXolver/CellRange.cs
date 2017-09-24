@@ -6,63 +6,21 @@ namespace PuzzlXolver
 {
     public class CellRange
     {
-        private int originX, originY;
-        private int length;
+        public int OriginX, OriginY;
+        public int Length;
         public Direction Direction { get; private set; }
 
-        public List<Cell> Cells { get; private set; }
-
-        internal CellRange(int originX, int originY, int length, Direction direction, List<Cell> cells)
+        public CellRange(int originX, int originY, int length, Direction direction)
         {
-			this.originX = originX;
-			this.originY = originY;
-            this.length = length;
+			this.OriginX = originX;
+			this.OriginY = originY;
+            this.Length = length;
             this.Direction = direction;
-            Cells = cells;
         }
 
-        public override string ToString()
+        public string ToString(Puzzle puzzle)
         {
-            return new string(Cells.Select(c => c.Value).ToArray());
+            return puzzle.GetWord(this);
         }
-
-        public void SetWord(string word)
-        {
-            if (!Matches(word)) throw new ArgumentException(nameof(word), $"Word {word} does not match {this}");
-
-            for (int pos = 0; pos < Cells.Count; pos++)
-            {
-                if (Cells[pos].State != CellState.Filled)
-                {
-                    Cells[pos].Value = word[pos];
-                }
-
-                if (Cells[pos].State == CellState.Filled && Cells[pos].Value != word[pos])
-                {
-                    var cellString = new string(Cells.Select(c => c.Value).ToArray());
-                    throw new ArgumentException(nameof(word), $"Word can not be used. Mismatch at position {pos} between {cellString} and {word}");
-                }
-            }
-        }
-
-		public bool PartiallyFilled()
-		{
-			return Cells.Any(c => c.State == CellState.Filled) && Cells.Any(c => c.State != CellState.Filled);
-		}
-
-        public bool Matches(string word)
-        {
-            if (Cells.Count != word.Length) return false;
-
-			for (int pos = 0; pos < Cells.Count; pos++)
-			{
-				if (Cells[pos].State == CellState.Filled && Cells[pos].Value != word[pos])
-				{
-                    return false;
-				}
-			}
-
-            return true;
-		}
 	}
 }
