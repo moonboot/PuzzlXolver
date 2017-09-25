@@ -27,7 +27,7 @@ namespace PuzzlXolver
 
 		public Puzzle SetWord(CellRange cellRange, string word)
 		{
-            if (!Matches(cellRange, word)) throw new ArgumentException("Mismatch");
+            //if (!Matches(cellRange, word)) throw new ArgumentException("Mismatch");
 
             var puzzle = new Puzzle(this.cells, this.cellRanges, this.Words.Where(w => w != word));
 			puzzle.SetWord(cellRange.OriginX, cellRange.OriginY, cellRange.Length, cellRange.Direction, word);
@@ -77,11 +77,11 @@ namespace PuzzlXolver
 
         private void SetLetter(int x, int y, char letter)
         {
-            if (cells[x, y].HasValue)
-            {
-                if (cells[x, y] != letter) throw new ArgumentException(nameof(letter), $"Can not set letter '{letter}' at {x}, {y} where there is already '{cells[x, y]}'");
-            }
-            else
+            //if (cells[x, y].HasValue)
+            //{
+            //    if (cells[x, y] != letter) throw new ArgumentException(nameof(letter), $"Can not set letter '{letter}' at {x}, {y} where there is already '{cells[x, y]}'");
+            //}
+            //else
             {
                 cells[x, y] = letter;
             }
@@ -171,7 +171,7 @@ namespace PuzzlXolver
 				lines.Add(line);
 			}
 
-			lines.Add(String.Join(", ", CalculateWordLengths().OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key} letters: {kvp.Value}")));
+//			lines.Add(String.Join(", ", CalculateWordLengths().OrderBy(kvp => kvp.Key).Select(kvp => $"{kvp.Key} letters: {kvp.Value}")));
 
 			return string.Join(Environment.NewLine, lines);
 		}

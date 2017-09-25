@@ -8,7 +8,7 @@ namespace PuzzlXolver
         public static void Main(string[] args)
         {
             var saillagouse = KrydsordMix.CreatePage59();
-            var solver = new DepthFirstBruteForceSolver();
+            var solver = new PlausibilitySolver();
             Stopwatch stopwatch = Stopwatch.StartNew();
             var solution = solver.Solve(saillagouse);
             if (solution != null)
