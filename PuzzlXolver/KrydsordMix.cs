@@ -4,6 +4,73 @@ namespace PuzzlXolver
 {
     public static class KrydsordMix
     {
+        public static Puzzle CreatePage9()
+        {
+            var words = new[] {
+                "GES", "HAN", "INA", "LYN", "NON",
+                "BÅSE", "ELVE", "ETIK", "GREJ", "HØNE", "IGEN",
+                "IOTA", "LUDO", "NAIV", "TABU", "UVIS", "ÆDLE",
+                "ARKEN", "HANOI", "LABRE", "NAGET", "NINJA", "SÅEDE",
+                "FORFRA", "GRAPPA", "INDTIL", "JAGTEN", "NEDISE", "SIVSKO",
+                "BJÆFFET", "ERHOLDT", "GRISERI", "RÅDSNAR",
+                "SJOVERE", "UTÆTHED", "VANDLÅS", "VEJBUMP",
+            };
+
+            List<CellRange> cellRanges = new List<CellRange>();
+
+			// 3's
+			cellRanges.Add(new CellRange(5, 5, 3, Direction.Horizontal));
+			cellRanges.Add(new CellRange(5, 7, 3, Direction.Horizontal));
+			cellRanges.Add(new CellRange(5, 9, 3, Direction.Horizontal));
+			cellRanges.Add(new CellRange(0, 6, 3, Direction.Vertical));
+			cellRanges.Add(new CellRange(12, 6, 3, Direction.Vertical));
+
+			// 4's
+			foreach (var row in new[] {0, 2, 4, 10, 12, 14})
+            {
+                cellRanges.Add(new CellRange(0, row, 4, Direction.Horizontal));
+				cellRanges.Add(new CellRange(9, row, 4, Direction.Horizontal));
+			}
+
+			// 5's
+			cellRanges.Add(new CellRange(0, 0, 5, Direction.Vertical));
+			cellRanges.Add(new CellRange(0, 10, 5, Direction.Vertical));
+			cellRanges.Add(new CellRange(12, 0, 5, Direction.Vertical));
+			cellRanges.Add(new CellRange(12, 10, 5, Direction.Vertical));
+			cellRanges.Add(new CellRange(5, 5, 5, Direction.Vertical));
+			cellRanges.Add(new CellRange(7, 5, 5, Direction.Vertical));
+
+			// 6's
+			cellRanges.Add(new CellRange(0, 6, 6, Direction.Horizontal));
+			cellRanges.Add(new CellRange(7, 6, 6, Direction.Horizontal));
+			cellRanges.Add(new CellRange(0, 8, 6, Direction.Horizontal));
+			cellRanges.Add(new CellRange(7, 8, 6, Direction.Horizontal));
+			cellRanges.Add(new CellRange(6, 0, 6, Direction.Vertical));
+			cellRanges.Add(new CellRange(6, 9, 6, Direction.Vertical));
+
+			// Horizontal 7's
+			foreach (var row in new[] { 1, 3, 11, 13 })
+			{
+				cellRanges.Add(new CellRange(3, row, 7, Direction.Horizontal));
+			}
+
+			// Vertical 7's
+			cellRanges.Add(new CellRange(3, 0, 7, Direction.Vertical));
+			cellRanges.Add(new CellRange(9, 0, 7, Direction.Vertical));
+			cellRanges.Add(new CellRange(3, 8, 7, Direction.Vertical));
+			cellRanges.Add(new CellRange(9, 8, 7, Direction.Vertical));
+
+			var puzzle = new Puzzle(13, 15, cellRanges, words);
+
+			string anchorWord = "HANOI";
+			CellRange anchorRange = puzzle.FindCellRange(5, 5, Direction.Vertical);
+			puzzle = puzzle.SetWord(anchorRange, anchorWord);
+
+			puzzle.Verify();
+
+			return puzzle;
+		} 
+
 		public static Puzzle CreateRoyce()
 		{
 			var words = new[] {
@@ -20,34 +87,7 @@ namespace PuzzlXolver
 				"REBELSK", "ROSTBØF", "SKAMLØS", "SKARVER", "SNALRET", "SVIREDE", "UDDRIVE", "ULVEHYL",
 			};
 
-			List<CellRange> cellRanges = new List<CellRange>();
-
-			// 5x5 squares
-			for (int column = 0; column < 24; column += 6)
-			{
-				for (int row = 0; row < 24; row += 6)
-				{
-					cellRanges.AddRange(AddSquare(column, row, 5));
-				}
-			}
-
-			// 7x7 squares
-			for (int column = 2; column < 26; column += 12)
-			{
-				for (int row = 2; row < 26; row += 12)
-				{
-					cellRanges.AddRange(AddSquare(column, row, 7));
-				}
-			}
-
-			// 3s
-			for (int i = 2; i < 24; i += 6)
-			{
-				cellRanges.Add(new CellRange(10, i, 3, Direction.Horizontal));
-				cellRanges.Add(new CellRange(i, 10, 3, Direction.Vertical));
-			}
-
-			var puzzle = new Puzzle(23, 23, cellRanges, words);
+			var puzzle = new Puzzle(23, 23, Create357Ranges(), words);
 
 			string anchorWord = "ROYCE";
 			CellRange anchorRange = puzzle.FindCellRange(22, 18, Direction.Vertical);
@@ -74,6 +114,19 @@ namespace PuzzlXolver
 				"PRAKSIS", "RIMSMED", "SEMINAR", "SKITSER", "SLØJFER", "SPINKEL", "TIDLIGT", "TRICEPS",
 			};
 
+			var puzzle = new Puzzle(23, 23, Create357Ranges(), words);
+
+			string anchorWord = "RADER";
+			CellRange anchorRange = puzzle.FindCellRange(22, 18, Direction.Vertical);
+			puzzle = puzzle.SetWord(anchorRange, anchorWord);
+
+			puzzle.Verify();
+
+			return puzzle;
+		}
+
+        static List<CellRange> Create357Ranges() 
+        {
 			List<CellRange> cellRanges = new List<CellRange>();
 
 			// 5x5 squares
@@ -101,15 +154,7 @@ namespace PuzzlXolver
 				cellRanges.Add(new CellRange(i, 10, 3, Direction.Vertical));
 			}
 
-			var puzzle = new Puzzle(23, 23, cellRanges, words);
-
-			string anchorWord = "RADER";
-			CellRange anchorRange = puzzle.FindCellRange(22, 18, Direction.Vertical);
-			puzzle = puzzle.SetWord(anchorRange, anchorWord);
-
-			puzzle.Verify();
-
-			return puzzle;
+            return cellRanges;
 		}
 
 		static IEnumerable<CellRange> AddSquare(int column, int row, int size)

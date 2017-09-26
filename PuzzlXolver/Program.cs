@@ -7,10 +7,13 @@ namespace PuzzlXolver
     {
         public static void Main(string[] args)
         {
-            var saillagouse = KrydsordMix.CreatePage59();
+			//            var puzzle = KrydsordMix.CreatePage9();
+            var puzzle = KrydsordMix.CreatePage59();
+			Console.WriteLine(puzzle);
+
             var solver = new PlausibilitySolver();
             Stopwatch stopwatch = Stopwatch.StartNew();
-            var solution = solver.Solve(saillagouse);
+            var solution = solver.Solve(puzzle);
             if (solution != null)
             {
 				Console.WriteLine(solution);

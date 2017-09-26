@@ -6,7 +6,7 @@ namespace PuzzlXolver
 {
 	public class Puzzle
 	{
-		char?[,] cells;
+		public char?[,] cells;
 		List<CellRange> cellRanges = new List<CellRange>();
         public List<string> Words { get; private set; }
 
@@ -19,35 +19,41 @@ namespace PuzzlXolver
 
 		private Puzzle(char?[,] cells, List<CellRange> cellRanges, IEnumerable<string> words)
 		{
-            this.cells = new char?[cells.GetLength(0), cells.GetLength(1)];
-            Array.Copy(cells, this.cells, cells.GetLength(0) * cells.GetLength(1));
+            this.cells = cells;
 			this.cellRanges = cellRanges;
 			this.Words = words.ToList();
+		}
+
+        public char?[,] CopyOfCells()
+        {
+			var result = new char?[cells.GetLength(0), cells.GetLength(1)];
+			Array.Copy(cells, result, cells.GetLength(0) * cells.GetLength(1));
+            return result;
 		}
 
 		public Puzzle SetWord(CellRange cellRange, string word)
 		{
             //if (!Matches(cellRange, word)) throw new ArgumentException("Mismatch");
 
-            var puzzle = new Puzzle(this.cells, this.cellRanges, this.Words.Where(w => w != word));
-			puzzle.SetWord(cellRange.OriginX, cellRange.OriginY, cellRange.Length, cellRange.Direction, word);
+            var puzzle = new Puzzle(CopyOfCells(), this.cellRanges, this.Words.Where(w => w != word));
+			puzzle.SetLetters(cellRange, word);
             return puzzle;
 		}
 
-		private void SetWord(int originX, int originY, int length, Direction direction, string word)
+		private void SetLetters(CellRange cellRange, string word)
 		{
-			if (direction == Direction.Horizontal)
+			if (cellRange.Direction == Direction.Horizontal)
 			{
-				for (int column = 0; column < length; column++)
+				for (int column = 0; column < cellRange.Length; column++)
 				{
-                    SetLetter(originX + column, originY, word[column]);
+                    SetLetter(cellRange.OriginX + column, cellRange.OriginY, word[column]);
 				}
 			}
 			else
 			{
-				for (int row = 0; row < length; row++)
+				for (int row = 0; row < cellRange.Length; row++)
 				{
-                    SetLetter(originX, originY + row, word[row]);
+                    SetLetter(cellRange.OriginX, cellRange.OriginY + row, word[row]);
 				}
 			}
 		}
@@ -101,10 +107,17 @@ namespace PuzzlXolver
 
 		public void Verify()
 		{
-			var wordLengths = CalculateWordLengths();
-			var rangeLength = cellRanges.GroupBy(cr => cr.Length).ToDictionary(g => g.Key, g => g.Count());
+			var notFilled = cellRanges.Where(cr => GetLetters(cr).Any(l => !l.HasValue)).ToList();
+			
+            if (Words.Count() != notFilled.Count())
+            {
+				throw new Exception($"Expected {cellRanges.Count()} words, but got {Words.Count()}");
+			}
 
-			foreach (var kvp in rangeLength)
+			var wordLengths = Words.GroupBy(w => w.Length).ToDictionary(g => g.Key, g => g.Count());
+            var rangeLengths = notFilled.GroupBy(cr => cr.Length).ToDictionary(g => g.Key, g => g.Count());
+
+			foreach (var kvp in rangeLengths)
 			{
 				if (wordLengths[kvp.Key] != kvp.Value)
 				{
@@ -125,7 +138,11 @@ namespace PuzzlXolver
 
         public IEnumerable<CellRange> PartiallyFilledCellRanges => cellRanges.Where(PartiallyFilled);
 
-        private bool PartiallyFilled(CellRange cellRange) 
+		public IEnumerable<CellRange> FilledCellRanges => cellRanges.Where(c => this.GetLetters(c).All(l => l.HasValue));
+
+        public IEnumerable<CellRange> UnfilledCellRanges => cellRanges.Where(c => this.GetLetters(c).All(l => !l.HasValue));
+
+		private bool PartiallyFilled(CellRange cellRange) 
         {
             var letters = this.GetLetters(cellRange).ToList();
             return letters.Any(c => c.HasValue) && letters.Any(c => !c.HasValue);
@@ -166,7 +183,8 @@ namespace PuzzlXolver
 				string line = "";
 				for (int column = 0; column < cells.GetLength(0); column++)
 				{
-					line += $"{cells[column, row] ?? ' '} ";
+                    var blankValue = ' '; //(cellRanges.Any(c => c.Covers(column, row))) ? '\u25A1' : ' ';
+					line += $"{cells[column, row] ?? blankValue} ";
 				}
 				lines.Add(line);
 			}

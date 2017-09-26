@@ -22,5 +22,22 @@ namespace PuzzlXolver
         {
             return puzzle.GetWord(this);
         }
+
+        public bool Covers(int x, int y)
+        {
+            if (x == OriginX && Direction == Direction.Vertical) {
+                return y >= OriginY && y < OriginY + Length;
+            }
+            if (y == OriginY && Direction == Direction.Horizontal)
+			{
+				return x >= OriginX && x < OriginX + Length;
+			}
+            return false;
+		}
+
+        public override string ToString()
+        {
+            return string.Format($"{OriginX}, {OriginY}, {Length}, {Direction}", Direction);
+        }
 	}
 }

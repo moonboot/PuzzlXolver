@@ -37,7 +37,21 @@ namespace PuzzlXolver.Test
             Console.WriteLine(saillagouse);
         }
 
-        [Test]
+		[Test]
+		public void PrintRoyce()
+		{
+            var rolls = KrydsordMix.CreateRoyce();
+			Console.WriteLine(rolls);
+		}
+
+		[Test]
+		public void PrintPage9()
+		{
+			var xxx = KrydsordMix.CreatePage9();
+			Console.WriteLine(xxx);
+		}
+
+		[Test]
         public void NoAnchorWordIsNotSolvable()
         {
             var cellRanges = new List<CellRange>
@@ -82,5 +96,16 @@ namespace PuzzlXolver.Test
             Assert.That(solution.GetWord(cellRanges[2]), Is.EqualTo(words[2]));
             Assert.That(solution.GetWord(cellRanges[3]), Is.EqualTo(words[3]));
         }
+
+        [Test]
+        public void Covers()
+        {
+            var cr = new CellRange(2, 4, 6, Direction.Horizontal);
+			Assert.That(cr.Covers(1, 4), Is.False);
+			Assert.That(cr.Covers(2, 4), Is.True);
+			Assert.That(cr.Covers(7, 4), Is.True);
+			Assert.That(cr.Covers(8, 4), Is.False);
+			Assert.That(cr.Covers(5, 5), Is.False);
+		}
     }
 }
