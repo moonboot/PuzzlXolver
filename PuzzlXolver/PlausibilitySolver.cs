@@ -28,29 +28,35 @@ namespace PuzzlXolver
 			}
 
 			var part = puzzle.PartiallyFilledCellRanges.ToList();
-			foreach (var partiallyFilled in part)
-			{
-                var candidates = puzzle.Words.Where(w => puzzle.Matches(partiallyFilled, w)).ToList();
-				foreach (var candidateWord in candidates)
-				{
-                    context.count++;
+            List<Tuple<string, List<CellRange>>> combos = new List<Tuple<string, List<CellRange>>>();
 
-                    var candidatePuzzle = puzzle.SetWord(partiallyFilled, candidateWord);
-                    if (context.Tried.Any(u => Matches(u, candidatePuzzle.cells))) continue;
-					context.Tried.Add(candidatePuzzle.CopyOfCells());
+			foreach (var word in puzzle.Words)
+            {
+                combos.Add(Tuple.Create(word, part.Where(p => puzzle.Matches(p, word)).ToList()));
+            }
+
+            foreach (var combo in combos.OrderBy(c => c.Item2.Count()).ThenByDescending(c => c.Item1.Length))
+            {
+                foreach (var range in combo.Item2)
+                {
+					context.count++;
+
+					var candidatePuzzle = puzzle.SetWord(range, combo.Item1);
+					if (context.Tried.Any(u => Matches(u, candidatePuzzle.cells))) continue;
 
 					Console.WriteLine(candidatePuzzle);
 					var isPlausible = IsPlausible(candidatePuzzle);
 					if (isPlausible)
-                    {
-                        context.depth++;
-                        var solved = Solve(candidatePuzzle, context);
-                        context.depth--;
-                        if (solved != null)
-                        {
-                            return solved;
-                        }
-                    }
+					{
+						context.depth++;
+						var solved = Solve(candidatePuzzle, context);
+						context.depth--;
+						if (solved != null)
+						{
+							return solved;
+						}
+						context.Tried.Add(candidatePuzzle.CopyOfCells());
+					}
 				}
 			}
 
@@ -88,13 +94,16 @@ namespace PuzzlXolver
             return true;
         }
 
-        private bool Matches(char?[,] cells1, char?[,] cells2)
+        // If all the tried values are also in the candidate, it will not lead to a solution
+        private bool Matches(char?[,] tried, char?[,] candidate)
         {
-            for (int x = 0; x < cells1.GetLength(0); x++)
+            for (int x = 0; x < tried.GetLength(0); x++)
             {
-                for (int y = 0; y < cells1.GetLength(1); y++)
+                for (int y = 0; y < tried.GetLength(1); y++)
                 {
-                    if (cells1[x, y] != cells2[x, y]) return false;
+                    var triedValue = tried[x, y];
+                    var candidateValue = candidate[x, y];
+                    if (triedValue.HasValue && candidateValue.HasValue && triedValue != candidateValue) return false;
                 }
             }
             return true;
