@@ -55,6 +55,13 @@ namespace PuzzlXolver
 						{
 							return solved;
 						}
+                        if (candidatePuzzle.IsPartialSolution())
+                        {
+                            Console.WriteLine("Rejected partial solution:");
+                            Console.WriteLine(candidatePuzzle);
+                            candidatePuzzle.IsPartialSolution();
+                            Environment.Exit(-1);
+                        }
 						context.Tried.Add(candidatePuzzle.CopyOfCells());
 					}
 				}

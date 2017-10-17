@@ -155,6 +155,20 @@ namespace PuzzlXolver
             }
         }
 
+        public bool IsPartialSolution()
+        {
+            foreach (var cellRange in FilledCellRanges)
+            {
+                var filledWord = GetWord(cellRange, cells);
+                var solutionWord = GetWord(cellRange, solution);
+                if (filledWord != solutionWord)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public CellRange FindCellRange(int column, int row, Direction direction)
         {
             return cellRanges.SingleOrDefault(cr => cr.OriginX == column && cr.OriginY == row && cr.Direction == direction);

@@ -5,10 +5,9 @@ namespace PuzzlXolver
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-			//            var puzzle = KrydsordMix.CreatePage9();
-            var puzzle = KrydsordMix.CreatePage59();
+            var puzzle = KrydsordMix.CreatePage9();
 			Console.WriteLine(puzzle);
 
             var solver = new PlausibilitySolver();
