@@ -39,5 +39,19 @@ namespace PuzzlXolver
         {
             return string.Format($"{OriginX}, {OriginY}, {Length}, {Direction}", Direction);
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = (CellRange)obj;
+            return this.OriginX == other.OriginX 
+                       && this.OriginY == other.OriginY 
+                       && this.Length == other.Length 
+                       && this.Direction == other.Direction;
+        }
+
+        public override int GetHashCode()
+        {
+            return OriginX + OriginY + Length + (int)Direction;
+        }
 	}
 }

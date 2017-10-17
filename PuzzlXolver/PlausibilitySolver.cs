@@ -41,8 +41,23 @@ namespace PuzzlXolver
                 {
 					context.count++;
 
-					var candidatePuzzle = puzzle.SetWord(range, combo.Item1);
-					if (context.Tried.Any(u => Matches(u, candidatePuzzle.cells))) continue;
+                    var candidatePuzzle = puzzle.SetWord(range, combo.Item1);
+                    if (candidatePuzzle == null) 
+                    {
+                        continue;
+                    }
+
+                    if (context.Tried.Any(u => Matches(u, candidatePuzzle.cells)))
+                    {
+                        continue;
+                    }
+
+                    //var words = candidatePuzzle.Words.ToArray();
+                    //var ranges = candidatePuzzle.PartiallyFilledCellRanges.Concat(candidatePuzzle.UnfilledCellRanges).ToArray();
+                    //if (words.Length != ranges.Length)
+                    //{
+                    //    continue;
+                    //}
 
 					Console.WriteLine(candidatePuzzle);
 					var isPlausible = IsPlausible(candidatePuzzle);

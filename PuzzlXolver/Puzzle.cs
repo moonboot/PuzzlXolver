@@ -43,6 +43,21 @@ namespace PuzzlXolver
 
             var puzzle = new Puzzle(CopyOfCells(), this.cellRanges, this.Words.Where(w => w != word), this.solution);
             puzzle.SetLetters(cellRange, word);
+            var newFilled = puzzle.FilledCellRanges.ToList();
+            var currentFilled = FilledCellRanges.ToList();
+            var diff = newFilled.Except(currentFilled).ToList();
+            diff.Remove(cellRange);
+            if (diff.Count() > 0)
+            {
+                foreach (var cr in diff)
+                {
+                    var extraWord = puzzle.GetWord(cr);
+                    if (!puzzle.Words.Remove(extraWord))
+                    {
+                        return null; // Fill was invalid    
+                    }
+                }
+            }
             return puzzle;
         }
 
