@@ -8,7 +8,7 @@ namespace PuzzlXolver.Test
     [TestFixture]
     public class UnitTests
     {
-        //  + - 0 - A
+        //  + - 0 - +
         //  |       |
         //  1       2
         //  |       |
@@ -24,10 +24,9 @@ namespace PuzzlXolver.Test
                 new CellRange(0, 2, 3, Direction.Horizontal),
             };
 
-			var puzzle = new Puzzle(3, 3, cellRanges, new List<string>());
+            var puzzle = new Puzzle(3, 3, cellRanges, new List<string>());
 
-            Console.WriteLine("Puzzle:");
-            Console.WriteLine(puzzle);
+            Assert.That(puzzle.ToString(), Is.EqualTo("      \n      \n      "));
         }
 
         [Test]
@@ -37,21 +36,21 @@ namespace PuzzlXolver.Test
             Console.WriteLine(saillagouse);
         }
 
-		[Test]
-		public void PrintRoyce()
-		{
+        [Test]
+        public void PrintRoyce()
+        {
             var rolls = KrydsordMix.CreateRoyce();
-			Console.WriteLine(rolls);
-		}
+            Console.WriteLine(rolls);
+        }
 
-		[Test]
-		public void PrintPage9()
-		{
-			var xxx = KrydsordMix.CreatePage9();
-			Console.WriteLine(xxx);
-		}
+        [Test]
+        public void PrintPage9()
+        {
+            var xxx = KrydsordMix.CreatePage9();
+            Console.WriteLine(xxx);
+        }
 
-		[Test]
+        [Test]
         public void NoAnchorWordIsNotSolvable()
         {
             var cellRanges = new List<CellRange>
@@ -72,22 +71,22 @@ namespace PuzzlXolver.Test
         [Test]
         public void SolvePuzzle()
         {
-			var cellRanges = new List<CellRange>
-			{
-				new CellRange(0, 0, 3, Direction.Horizontal),
-				new CellRange(0, 0, 3, Direction.Vertical),
-				new CellRange(2, 0, 3, Direction.Vertical),
-				new CellRange(0, 2, 3, Direction.Horizontal)
-			};
+            var cellRanges = new List<CellRange>
+            {
+                new CellRange(0, 0, 3, Direction.Horizontal),
+                new CellRange(0, 0, 3, Direction.Vertical),
+                new CellRange(2, 0, 3, Direction.Vertical),
+                new CellRange(0, 2, 3, Direction.Horizontal)
+            };
 
-			var words = new List<string> { "ABC", "ABE", "CDE", "EGE" };
-			var puzzle = new Puzzle(3, 3, cellRanges, words);
+            var words = new List<string> { "ABC", "ABE", "CDE", "EGE" };
+            var puzzle = new Puzzle(3, 3, cellRanges, words);
 
             puzzle = puzzle.SetWord(cellRanges[0], "ABC");
 
             puzzle.Verify();
 
-			var solver = new DepthFirstBruteForceSolver();
+            var solver = new DepthFirstBruteForceSolver();
             var solution = solver.Solve(puzzle);
             Assert.That(solution, Is.Not.Null);
 
@@ -101,11 +100,18 @@ namespace PuzzlXolver.Test
         public void Covers()
         {
             var cr = new CellRange(2, 4, 6, Direction.Horizontal);
-			Assert.That(cr.Covers(1, 4), Is.False);
-			Assert.That(cr.Covers(2, 4), Is.True);
-			Assert.That(cr.Covers(7, 4), Is.True);
-			Assert.That(cr.Covers(8, 4), Is.False);
-			Assert.That(cr.Covers(5, 5), Is.False);
-		}
+            Assert.That(cr.Covers(1, 4), Is.False);
+            Assert.That(cr.Covers(2, 4), Is.True);
+            Assert.That(cr.Covers(7, 4), Is.True);
+            Assert.That(cr.Covers(8, 4), Is.False);
+            Assert.That(cr.Covers(5, 5), Is.False);
+        }
+
+        [Test]
+        public void VerifySolution()
+        {
+            KrydsordMix.CreatePage9().Verify();
+            KrydsordMix.CreatePage59().Verify();
+        }
     }
 }

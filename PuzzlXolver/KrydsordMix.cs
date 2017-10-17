@@ -66,6 +66,23 @@ namespace PuzzlXolver
 			CellRange anchorRange = puzzle.FindCellRange(5, 5, Direction.Vertical);
 			puzzle = puzzle.SetWord(anchorRange, anchorWord);
 
+            puzzle.SetSolution(
+                "NAIV  F  UVIS",
+                "A  ERHOLDT  Å",
+                "GREJ  R  ÆDLE",
+                "E  BJÆFFET  D",
+                "TABU  R  HØNE",
+                "   M HAN E   ",
+                "GRAPPA INDTIL",
+                "E    NON    Y",
+                "SIVSKO JAGTEN",
+                "   J INA R   ",
+                "LUDO  E  IOTA",
+                "A  VANDLÅS  R",
+                "BÅSE  I  ETIK",
+                "R  RÅDSNAR  E",
+                "ELVE  E  IGEN");
+
 			puzzle.Verify();
 
 			return puzzle;
@@ -101,7 +118,7 @@ namespace PuzzlXolver
 		public static Puzzle CreatePage59()
 		{
 			var words = new[] {
-				"BOG", "DUN", "KEL", "NID", "REB", "RET", "RUN", "VAT",
+				"DOG", "DUN", "KEL", "NID", "REB", "RET", "RUN", "VAT",
 				"AFKOM", "AGILE", "ANGAV", "ANKER", "ASIAT", "BAGEL", "BASAR", "BEFRI",
 				"BUTIK", "CHIPS", "CONGA", "DALRE", "DOVNE", "DRUER", "DØSIG", "EMNER",
 				"ENDTE", "ENØRE", "EPSOM", "ERROR", "EVIGE", "GALLA", "GARDE", "GINER",
@@ -120,7 +137,32 @@ namespace PuzzlXolver
 			CellRange anchorRange = puzzle.FindCellRange(22, 18, Direction.Vertical);
 			puzzle = puzzle.SetWord(anchorRange, anchorWord);
 
-			puzzle.Verify();
+            puzzle.SetSolution(
+                "GALLA OPTOG CHIPS AFKOM",
+                "N   G R   A O   N N   O",
+                "A SPINKEL RUN BRUDGOM B",
+                "G L L E Y D G R E A O I",
+                "SKØRE NASSE ASIAT VARYL",
+                "  J     E     E     S  ",
+                "BEFRI RØRIG UTOPI ØBOEN",
+                "U E S A Ø I D S N R M Æ",
+                "T RIMSMED NID TIDLIGT G",
+                "I   E P   E Ø   S G   T",
+                "KODER ERROR DOVNE ENDTE",
+                "  U     E     A     O  ",
+                "PANEL TOBAK NUTID BAGEL",
+                "L   Y E   A I   A A   E",
+                "U POSTHUS RET FILOSOF D",
+                "M R E U E M A O R A E E",
+                "PLANT SUMMA LIRKE RÅDET",
+                "  K     I     L     T  ",
+                "DØSIG EMNER KRYBE OPHØR",
+                "R I L P A Å O D V M A A",
+                "U SKITSER KEL TRICEPS D",
+                "E   D O   I D   G G   E",
+                "RASTE MÅNED ENØRE ANKER");
+			
+            puzzle.Verify();
 
 			return puzzle;
 		}
