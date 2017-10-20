@@ -172,6 +172,7 @@ namespace PuzzlXolver
 
         public bool IsPartialSolution()
         {
+            if (solution == null) return false;
             foreach (var cellRange in FilledCellRanges)
             {
                 var filledWord = GetWord(cellRange, cells);
@@ -194,6 +195,8 @@ namespace PuzzlXolver
         public IEnumerable<CellRange> FilledCellRanges => cellRanges.Where(c => GetLetters(c, cells).All(l => l.HasValue));
 
         public IEnumerable<CellRange> UnfilledCellRanges => cellRanges.Where(c => GetLetters(c, cells).All(l => !l.HasValue));
+
+        public IEnumerable<CellRange> NotFullyFilledCellRanges => cellRanges.Where(c => GetLetters(c, cells).Any(l => !l.HasValue));
 
         private bool PartiallyFilled(CellRange cellRange) 
         {

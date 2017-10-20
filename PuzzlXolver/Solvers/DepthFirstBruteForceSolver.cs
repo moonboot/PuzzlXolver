@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace PuzzlXolver
+namespace PuzzlXolver.Solvers
 {
     public class DepthFirstBruteForceSolver
     {

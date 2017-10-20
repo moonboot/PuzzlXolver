@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using PuzzlXolver.Solvers;
 
 namespace PuzzlXolver
 {
@@ -7,10 +8,10 @@ namespace PuzzlXolver
     {
         public static void Main()
         {
-            var puzzle = KrydsordMix.CreatePage9();
+            var puzzle = KrydsordMix.CreatePage59();
 			Console.WriteLine(puzzle);
 
-            var solver = new PlausibilitySolver();
+            var solver = new PlausibilitySolverWithPreelimination();// new BreadthFirstPlausibilitySolver();
             Stopwatch stopwatch = Stopwatch.StartNew();
             var solution = solver.Solve(puzzle);
             if (solution != null)

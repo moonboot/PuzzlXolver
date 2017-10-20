@@ -35,6 +35,26 @@ namespace PuzzlXolver
             return false;
 		}
 
+        public bool Overlaps(CellRange other)
+        {
+            // TODO: Optimize - it should not be necessary to check every cell
+            if (Direction == Direction.Horizontal)
+            {
+                for (int column = 0; column < Length; column++)
+                {
+                    if (other.Covers(OriginX + column, OriginY)) return true;
+                }
+            }
+            else
+            {
+                for (int row = 0; row < Length; row++)
+                {
+                    if (other.Covers(OriginX, OriginY + row)) return true;
+                }
+            }
+            return false;
+        }
+
         public override string ToString()
         {
             return string.Format($"{OriginX}, {OriginY}, {Length}, {Direction}", Direction);

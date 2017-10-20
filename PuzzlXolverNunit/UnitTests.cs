@@ -2,6 +2,7 @@
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using PuzzlXolver.Solvers;
 
 namespace PuzzlXolver.Test
 {
@@ -112,6 +113,31 @@ namespace PuzzlXolver.Test
         {
             KrydsordMix.CreatePage9().Verify();
             KrydsordMix.CreatePage59().Verify();
+        }
+
+        [Test]
+        public void Overlaps()
+        {
+            var horizontal = new CellRange(0, 0, 3, Direction.Horizontal);
+            Assert.That(horizontal.Overlaps(new CellRange(0, 0, 3, Direction.Vertical)), Is.True);
+            Assert.That(horizontal.Overlaps(new CellRange(2, 0, 3, Direction.Vertical)), Is.True);
+            Assert.That(horizontal.Overlaps(new CellRange(0, 0, 3, Direction.Horizontal)), Is.True);
+            Assert.That(horizontal.Overlaps(new CellRange(2, 0, 3, Direction.Horizontal)), Is.True);
+            Assert.That(horizontal.Overlaps(new CellRange(0, 1, 3, Direction.Vertical)), Is.False);
+            Assert.That(horizontal.Overlaps(new CellRange(2, 1, 3, Direction.Vertical)), Is.False);
+
+            var vertical = new CellRange(0, 0, 3, Direction.Vertical);
+            Assert.That(vertical.Overlaps(new CellRange(0, 0, 3, Direction.Vertical)), Is.True);
+            Assert.That(vertical.Overlaps(new CellRange(2, 0, 3, Direction.Vertical)), Is.False);
+            Assert.That(vertical.Overlaps(new CellRange(0, 0, 3, Direction.Horizontal)), Is.True);
+            Assert.That(vertical.Overlaps(new CellRange(2, 0, 3, Direction.Horizontal)), Is.False);
+            Assert.That(vertical.Overlaps(new CellRange(0, 1, 3, Direction.Vertical)), Is.True);
+            Assert.That(vertical.Overlaps(new CellRange(2, 1, 3, Direction.Vertical)), Is.False);
+
+            var r005H = new CellRange(0, 0, 5, Direction.Horizontal);
+            Assert.That(new CellRange(0, 0, 5, Direction.Vertical).Overlaps(r005H), Is.True);
+            Assert.That(new CellRange(4, 0, 5, Direction.Vertical).Overlaps(r005H), Is.True);
+            Assert.That(new CellRange(4, 6, 5, Direction.Vertical).Overlaps(r005H), Is.False);
         }
     }
 }

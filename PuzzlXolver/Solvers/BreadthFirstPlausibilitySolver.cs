@@ -2,37 +2,54 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace PuzzlXolver
+namespace PuzzlXolver.Solvers
 {
-    public class SolverContext
+    public class BreadthFirstPlausibilitySolver
     {
-        public long count;
-        public int depth;
-        public List<char?[,]> Tried = new List<char?[,]>();
-    }
-
-    public class PlausibilitySolver
-    {
-        public Puzzle Solve(Puzzle puzzle)
+        public class SolverContext
         {
-            return Solve(puzzle, new SolverContext());
+            public Queue<Puzzle> queue = new Queue<Puzzle>();
+            public long count;
         }
 
-		public Puzzle Solve(Puzzle puzzle, SolverContext context)
+        public Puzzle Solve(Puzzle puzzle)
+        {
+            var context = new SolverContext();
+            context.queue.Enqueue(puzzle);
+            while (context.queue.Any())
+            {
+                var candidate = context.queue.Dequeue();
+                if (!candidate.Words.Any())
+                {
+                    return candidate;
+                }
+                else 
+                {
+                    GenerateLeads(candidate, context);
+                }
+            }
+            return null;
+        }
+
+		public void GenerateLeads(Puzzle puzzle, SolverContext context)
 		{
 //            if (context.count % 1000 < 3) Console.Write($"\r{context.count} / {context.depth}");
-
-			if (!puzzle.Words.Any())
-			{
-				return puzzle;
-			}
-
 			var part = puzzle.PartiallyFilledCellRanges.ToList();
             List<Tuple<string, List<CellRange>>> combos = new List<Tuple<string, List<CellRange>>>();
 
 			foreach (var word in puzzle.Words)
             {
                 combos.Add(Tuple.Create(word, part.Where(p => puzzle.Matches(p, word)).ToList()));
+            }
+
+            if (!combos.Any())
+            {
+                if (puzzle.IsPartialSolution())
+                {
+                    Console.WriteLine("Rejected partial solution:");
+                    Console.WriteLine(puzzle);
+                    Environment.Exit(-1);
+                }
             }
 
             foreach (var combo in combos.OrderBy(c => c.Item2.Count()).ThenByDescending(c => c.Item1.Length))
@@ -47,48 +64,15 @@ namespace PuzzlXolver
                         continue;
                     }
 
-                    if (context.Tried.Any(u => Matches(u, candidatePuzzle.cells)))
-                    {
-                        continue;
-                    }
-
-                    //var words = candidatePuzzle.Words.ToArray();
-                    //var ranges = candidatePuzzle.PartiallyFilledCellRanges.Concat(candidatePuzzle.UnfilledCellRanges).ToArray();
-                    //if (words.Length != ranges.Length)
-                    //{
-                    //    continue;
-                    //}
-
-					Console.WriteLine(candidatePuzzle);
 					var isPlausible = IsPlausible(candidatePuzzle);
+                    Console.WriteLine(candidatePuzzle);
+                    Console.WriteLine($"Queue length: {context.queue.Count}");
 					if (isPlausible)
 					{
-						context.depth++;
-						var solved = Solve(candidatePuzzle, context);
-						context.depth--;
-						if (solved != null)
-						{
-							return solved;
-						}
-                        if (candidatePuzzle.IsPartialSolution())
-                        {
-                            Console.WriteLine("Rejected partial solution:");
-                            Console.WriteLine(candidatePuzzle);
-                            candidatePuzzle.IsPartialSolution();
-                            Environment.Exit(-1);
-                        }
-						context.Tried.Add(candidatePuzzle.CopyOfCells());
+                        context.queue.Enqueue(candidatePuzzle);
 					}
 				}
 			}
-
-			if (!puzzle.Words.Any())
-			{
-				return puzzle;
-			}
-
-			// No solution is possible
-			return null;
 		}
 
         // Rules out combinations where a particular range has no matching word

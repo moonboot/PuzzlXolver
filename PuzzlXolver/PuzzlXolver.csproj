@@ -20,4 +20,7 @@
     <Compile Remove="PuzzlXolverNunit\UnitTests.cs" />
     <Compile Remove="PuzzleState.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Solvers\" />
+  </ItemGroup>
 </Project>
