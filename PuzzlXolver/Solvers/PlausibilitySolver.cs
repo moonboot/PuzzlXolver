@@ -105,89 +105,114 @@ namespace PuzzlXolver.Solvers
 
         public Puzzle Solve(Puzzle puzzle)
         {
-            return Solve(puzzle, new SolverContext(puzzle.Columns, puzzle.Rows));
+            return Solve(puzzle, new SolverContext(puzzle.Columns, puzzle.Rows), puzzle.FilledCellRanges.ToList());
         }
 
-		public Puzzle Solve(Puzzle puzzle, SolverContext context)
+		public Puzzle Solve(Puzzle puzzle, SolverContext context, List<CellRange> anchors)
 		{
-//            if (context.count % 1000 < 3) Console.Write($"\r{context.count} / {context.depth}");
-
-			if (!puzzle.Words.Any())
-			{
-				return puzzle;
-			}
-
-			var part = puzzle.PartiallyFilledCellRanges.ToList();
-            List<Tuple<string, List<CellRange>>> combos = new List<Tuple<string, List<CellRange>>>();
-
-            if (part.Any(p => !puzzle.Words.Any(w => puzzle.Matches(p, w))))
+            bool wordsInserted;
+            do
             {
-                return null;
-            }
-
-			foreach (var word in puzzle.Words)
-            {
-                combos.Add(Tuple.Create(word, part.Where(p => puzzle.Matches(p, word)).ToList()));
-            }
-
-            foreach (var combo in combos.OrderBy(c => c.Item2.Count()).ThenByDescending(c => c.Item1.Length))
-            {
-                var ranges = combo.Item2;
-
-                foreach (var range in ranges)
+                wordsInserted = false;
+                foreach (var range in puzzle.PartiallyFilledCellRanges.ToList())
                 {
-					context.count++;
-
-                    var candidatePuzzle = puzzle.SetWord(range, combo.Item1);
-                    if (candidatePuzzle == null) 
+                    var words = puzzle.Words.Where(w => puzzle.Matches(range, w));
+                    if (!words.Any()) return null;
+                    if (words.Count() == 1)
                     {
-                        continue;
+                        puzzle = puzzle.SetWord(range, words.Single());
+                        wordsInserted = true;
                     }
+                }
+            } while (wordsInserted);
 
-                    if (context.AlreadyTried(candidatePuzzle))
-                    {
-                        continue;
-                    }
+            var part = puzzle.PartiallyFilledCellRanges.ToList();
+            List<Tuple<string, CellRange>> pairs = new List<Tuple<string, CellRange>>();
+            foreach (var word in puzzle.Words)
+            {
+                foreach (var cellRange in part.Where(p => puzzle.Matches(p, word)))
+                {
+                    pairs.Add(Tuple.Create(word, cellRange));
+                }
+            }
 
-                    //var words = candidatePuzzle.Words.ToArray();
-                    //var ranges = candidatePuzzle.PartiallyFilledCellRanges.Concat(candidatePuzzle.UnfilledCellRanges).ToArray();
-                    //if (words.Length != ranges.Length)
-                    //{
-                    //    continue;
-                    //}
+            foreach (var pair in OrderPairs(pairs, anchors))
+            {
+                var word = pair.Item1;
+                var range = pair.Item2;
 
-					Console.WriteLine(candidatePuzzle);
+				context.count++;
+
+                var candidatePuzzle = puzzle.SetWord(range, word);
+                if (candidatePuzzle == null) 
+                {
+                    continue;
+                }
+
+                if (context.AlreadyTried(candidatePuzzle))
+                {
+                    continue;
+                }
+
+                //var words = candidatePuzzle.Words.ToArray();
+                //var ranges = candidatePuzzle.PartiallyFilledCellRanges.Concat(candidatePuzzle.UnfilledCellRanges).ToArray();
+                //if (words.Length != ranges.Length)
+                //{
+                //    continue;
+                //}
+
+                if (context.count % 10 == 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine(candidatePuzzle);
                     Console.WriteLine($"Solving C:{context.count} D:{context.depth} T:{context.TriedCount}");
-					var isPlausible = IsPlausible(candidatePuzzle);
-					if (isPlausible)
-					{
-						context.depth++;
-						var solved = Solve(candidatePuzzle, context);
-						context.depth--;
-						if (solved != null)
-						{
-							return solved;
-						}
-                        if (candidatePuzzle.IsPartialSolution())
-                        {
-                            Console.WriteLine("Rejected partial solution:");
-                            Console.WriteLine(candidatePuzzle);
-                            candidatePuzzle.IsPartialSolution();
-                            Environment.Exit(-1);
-                        }
-						context.AddTried(candidatePuzzle.CopyOfCells());
-					}
+                }
+                //foreach (var anchor in anchors)
+                //{
+                //    var cnt = part.Where(p => p.Overlaps(anchor)).Count();
+                //    Console.WriteLine($"{anchor}: {cnt}");
+                //}
+                //if (context.count > 50000)
+                //{
+                //    Console.ReadKey();
+                //}
+                context.depth++;
+                var solved = Solve(candidatePuzzle, context, anchors.Concat(new[] { range }).ToList());
+				context.depth--;
+				if (solved != null)
+				{
+					return solved;
 				}
-			}
-
-			if (!puzzle.Words.Any())
-			{
-				return puzzle;
+                if (candidatePuzzle.IsPartialSolution())
+                {
+                    Console.WriteLine("Rejected partial solution:");
+                    Console.WriteLine(candidatePuzzle);
+                    candidatePuzzle.IsPartialSolution();
+                    Environment.Exit(-1);
+                }
+				context.AddTried(candidatePuzzle.CopyOfCells());
 			}
 
 			// No solution is possible
 			return null;
 		}
+
+        private IEnumerable<Tuple<string, CellRange>> OrderPairs(List<Tuple<string, CellRange>> pairs, List<CellRange> anchors)
+        {
+            foreach (var anchor in anchors)
+            {
+                var overlappingRanges = pairs.Where(p => p.Item2.Overlaps(anchor)).OrderByDescending(p => p.Item2.Length).ToList();
+                foreach (var pair in overlappingRanges)
+                {
+                    pairs.Remove(pair);
+                    yield return pair;
+                }
+            }
+            foreach (var pair in pairs.OrderByDescending(p => p.Item1.Length))
+            {
+                yield return pair;
+            }
+        }
 
         // Rules out combinations where a particular range has no matching word
         public bool IsPlausible(Puzzle puzzle)

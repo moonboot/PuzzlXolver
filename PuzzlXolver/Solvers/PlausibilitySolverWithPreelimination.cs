@@ -9,10 +9,7 @@ namespace PuzzlXolver.Solvers
         {
             var context = new PlausibilitySolver.SolverContext(puzzle.Columns, puzzle.Rows);
             Preeliminate(puzzle, context);
-            Console.Clear();
-            Console.WriteLine($"Done pre-eliminating. Tried {context.TriedCount}. Press any key to continue.");
-            Console.ReadKey();
-            return new PlausibilitySolver().Solve(puzzle, context);
+            return new PlausibilitySolver().Solve(puzzle, context, puzzle.FilledCellRanges.ToList());
         }
 
         public void Preeliminate(Puzzle puzzle, PlausibilitySolver.SolverContext context)
@@ -30,8 +27,8 @@ namespace PuzzlXolver.Solvers
 
         public void Preeliminate(Puzzle puzzle, PlausibilitySolver.SolverContext context, CellRange previousRange)
         {
-            Console.WriteLine(puzzle);
-            Console.WriteLine($"Eliminating C:{context.count} D:{context.depth} T:{context.TriedCount}");
+            //Console.WriteLine(puzzle);
+            if (context.TriedCount % 500 == 0) Console.Write($"\rEliminating C:{context.count} D:{context.depth} T:{context.TriedCount}");
 
             var overlappingRanges = puzzle.NotFullyFilledCellRanges.Where(r => !r.Equals(previousRange) && r.Overlaps(previousRange)).ToList();
             foreach (var cellRange in overlappingRanges)
@@ -47,16 +44,10 @@ namespace PuzzlXolver.Solvers
                         Environment.Exit(-1);
                     }
                     context.AddTried(puzzle.cells);
-                    //if (context.Tried.Count > 3400)
-                    //{
-                    //    Console.Clear();
-                    //    Console.WriteLine(puzzle);
-                    //    Console.ReadKey();
-                    //}
                     return;
                 }
 
-                if (context.depth >= 2) return;
+                if (context.depth >= 1) return;
 
                 foreach (var word in words)
                 {
