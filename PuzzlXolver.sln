@@ -1,5 +1,5 @@
 
-Microsoft Visual Studio Solution File, Format Version 15.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuzzlXolver", "PuzzlXolver\PuzzlXolver.csproj", "{0EA4067D-500C-4778-B8A8-6EAD8117C2E2}"
 EndProject

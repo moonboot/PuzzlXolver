@@ -52,6 +52,13 @@ namespace PuzzlXolver.Test
         }
 
         [Test]
+        public void PrintPageDuo()
+        {
+            var duo = KrydsordMix.CreateWeekendDuoPage29();
+            Console.WriteLine(duo.ToString(true));
+        }
+
+        [Test]
         public void NoAnchorWordIsNotSolvable()
         {
             var cellRanges = new List<CellRange>
@@ -113,6 +120,7 @@ namespace PuzzlXolver.Test
         {
             KrydsordMix.CreatePage9().Verify();
             KrydsordMix.CreatePage59().Verify();
+            KrydsordMix.CreateWeekendDuoPage29().Verify();
         }
 
         [Test]

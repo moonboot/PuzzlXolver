@@ -8,7 +8,8 @@ namespace PuzzlXolver
     {
         public static void Main()
         {
-            var puzzle = KrydsordMix.CreatePage59();
+            //var puzzle = KrydsordMix.CreatePage59();
+            var puzzle = KrydsordMix.CreateWeekendDuoPage29();
 			Console.WriteLine(puzzle);
 
             var solver = new PlausibilitySolverWithPreelimination();// new BreadthFirstPlausibilitySolver();

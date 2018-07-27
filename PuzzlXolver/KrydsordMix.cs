@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq.Expressions;
+using System.Collections.Generic;
+using System;
 
 namespace PuzzlXolver
 {
@@ -166,6 +168,98 @@ namespace PuzzlXolver
 
 			return puzzle;
 		}
+
+
+        public static Puzzle CreateWeekendDuoPage29()
+        {
+            var words = new[] {
+                "CNN", "EGO", "ILT", "LAL", "NØK", "PIN", "RHO",
+                "TEN", "TUR", "TYK", "URO", "UZI", "VAG", "VAL",
+                "EGNE", "GUMP", "ISNE", "LÅST", "MOMS", "NABO",
+                "RIET", "ROSA", "SNIP", "SPID", "SØGE", "TEAM",
+                "AEROB", "ALGER", "DADEL", "ENDNU", "ESROM", "ETUDE",
+                "HENNA", "SUTTE", "TURBO", "TYREN", "TØMTE", "YNKET",
+                "DJÆVLE", "GÆLISK", "HVÆSER", "ILDRØD", "MIAVER", "SKODDE", "UDKAST", "UHØRTE",
+                "AFGIVET", "ALBERTA", "BROWNIE", "DENGSER", "GRILLEN", "INDLØSE",
+                "NOTATER", "OPPEFRA", "PRIVATE", "STODDER", "STUDIUM", "UVÆRDIG",
+                "AFHENTET", "AGERJORD", "BUMLETOG", "DECEMBER", "ENDEFULD", "KAKAOTRÆ", "TREKLANG", "VERSERER",
+                "AYATOLLAH", "EJENDOMME", "ETYMOLOGI", "INDSKIBER", "LYKKETRÆF", "MELODIØSE", "RUINEREDE", "WAGONERNE",
+            };
+
+            List<CellRange> cellRanges = new List<CellRange>();
+
+            Action<int, int, int, Direction> addRangeWithMirror = (int originX, int originY, int length, Direction direction) =>
+            {
+                cellRanges.Add(new CellRange(originX, originY, length, direction));
+                cellRanges.Add(new CellRange(23 - originX - (direction == Direction.Horizontal ? length : 1), originY, length, direction));
+            };
+
+            Action<int, int, int, Direction> addRangeWithDoubleMirror = (int originX, int originY, int length, Direction direction) =>
+            {
+                addRangeWithMirror(originX, originY, length, direction);
+                addRangeWithMirror(originX, 21 - originY - (direction == Direction.Vertical ? length : 1), length, direction);
+            };
+
+            // Ranges mirrored both horizontally and vertically, horizontal ranges
+            addRangeWithDoubleMirror(0, 0, 9, Direction.Horizontal);
+            addRangeWithDoubleMirror(8, 1, 3, Direction.Horizontal);
+            addRangeWithDoubleMirror(1, 2, 8, Direction.Horizontal);
+            addRangeWithDoubleMirror(0, 4, 7, Direction.Horizontal);
+            addRangeWithDoubleMirror(6, 5, 5, Direction.Horizontal);
+            addRangeWithDoubleMirror(0, 6, 7, Direction.Horizontal);
+            addRangeWithDoubleMirror(7, 7, 4, Direction.Horizontal);
+            addRangeWithDoubleMirror(0, 9, 4, Direction.Horizontal);
+            addRangeWithDoubleMirror(5, 9, 6, Direction.Horizontal);
+
+            // Ranges mirrored both horizontally and vertically, vertical ranges
+            addRangeWithDoubleMirror(1, 0, 5, Direction.Vertical);
+            addRangeWithDoubleMirror(1, 6, 4, Direction.Vertical);
+            addRangeWithDoubleMirror(2, 4, 3, Direction.Vertical);
+            addRangeWithDoubleMirror(3, 0, 3, Direction.Vertical);
+            addRangeWithDoubleMirror(6, 2, 5, Direction.Vertical);
+            addRangeWithDoubleMirror(8, 0, 6, Direction.Vertical);
+            addRangeWithDoubleMirror(10, 0, 8, Direction.Vertical);
+
+            // Ranges mirrored only horizontally (crosses horizontal center)
+            addRangeWithMirror(3, 10, 3, Direction.Horizontal);
+            addRangeWithMirror(3, 6, 9, Direction.Vertical);
+            addRangeWithMirror(5, 6, 9, Direction.Vertical);
+            addRangeWithMirror(7, 7, 7, Direction.Vertical);
+            addRangeWithMirror(9, 7, 7, Direction.Vertical);
+
+            var puzzle = new Puzzle(23, 21, cellRanges, words);
+
+            string anchorWord = "TØMTE";
+            CellRange anchorRange = puzzle.FindCellRange(6, 2, Direction.Vertical);
+            puzzle = puzzle.SetWord(anchorRange, anchorWord);
+
+            puzzle.SetSolution(
+                "AYATOLLAH A B MELODIØSE",
+                " N Y    VAG UZI    L U ",
+                " KAKAOTRÆ E M AFHENTET ",
+                " E    Ø S R L V E    T ",
+                "STUDIUM E J E E NOTATER",
+                "  R   TURBO TYREN   U  ",
+                "BROWNIE   R O   ALBERTA",
+                " O A N SPID GUMP Y T E ",
+                " S G D T N   V R K Y A ",
+                "NABO SKODDE GÆLISK MOMS",
+                "   NØK D L   R V EGO   ",
+                "ISNE ILDRØD UDKAST LÅST",
+                " N R B E S   I T R O Ø ",
+                " I N E RIET EGNE Æ G G ",
+                "OPPEFRA   R N   AFGIVET",
+                "  I   ETUDE DADEL   A  ",
+                "DENGSER H K E J GRILLEN",
+                " N    O Ø L F Æ E    S ",
+                " DECEMBER A U VERSERER ",
+                " N N    TEN LAL    H O ",
+                "RUINEREDE G D EJENDOMME");
+
+            puzzle.Verify();
+
+            return puzzle;
+        }
 
         static List<CellRange> Create357Ranges() 
         {
