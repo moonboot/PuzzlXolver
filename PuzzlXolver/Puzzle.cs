@@ -251,13 +251,18 @@ namespace PuzzlXolver
 
         public override string ToString()
         {
+            return ToString(false);
+        }
+
+        public string ToString(bool showRanges)
+        {
             var lines = new List<string>();
             for (int row = 0; row < cells.GetLength(1); row++)
             {
                 string line = "";
                 for (int column = 0; column < cells.GetLength(0); column++)
                 {
-                    var blankValue = ' '; //(cellRanges.Any(c => c.Covers(column, row))) ? '\u25A1' : ' ';
+                    var blankValue = showRanges && cellRanges.Any(c => c.Covers(column, row)) ? '\u25A1' : ' ';
                     line += $"{cells[column, row] ?? blankValue} ";
                 }
                 lines.Add(line);
